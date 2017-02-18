@@ -1,12 +1,10 @@
 package com.laccan.senseApp;
 
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 
 import net.tinyos.message.Message;
@@ -24,7 +22,7 @@ import com.digi.xbee.api.utils.HexUtils;
 
 
 class Sense implements MessageListener  {
-	
+
 	/***********Load native libraries *************/
 	private static String nativeLibraryPath = 
 			System.getProperty("user.dir") + "/sense_lib/native/Linux/x86_64-unknown-linux-gnu/";
@@ -34,7 +32,7 @@ class Sense implements MessageListener  {
 		System.load(nativeLibraryPath + "libgetenv.so");
 		System.load(nativeLibraryPath + "libtoscomm.so");
 	}
-	
+
 	/**************** MICAz's constants ****************/
 
 	private PhoenixSource phoenix;
@@ -46,6 +44,7 @@ class Sense implements MessageListener  {
 	private String date;
 
 	/**************** XBEE's constants ****************/
+	
 	//Replace with the serial port where your receiver module is connected.
 	private static final String PORT = "/dev/ttyUSB2";
 	//Replace with the baud rate of you receiver module.
@@ -71,7 +70,7 @@ class Sense implements MessageListener  {
 		mif.registerListener(new SenseMsg(),this);
 		//		Example "2016-06-24T21:58:19.000Z"
 		dt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.000Z");
-		
+
 	}
 
 	public void messageReceived(int dest_addr, Message msg) {
@@ -79,10 +78,10 @@ class Sense implements MessageListener  {
 		//Get current date
 		date = dt.format(System.currentTimeMillis());
 		//Display sensor data
-//		showData(msg);
+		showData(msg);
 
 		//insert data into database
-//		saveToDatabase(msg);
+		saveToDatabase(msg);
 	}
 
 	private int[] calculateTaos(int VisibleLight,int InfraredLight) {
@@ -196,6 +195,7 @@ class Sense implements MessageListener  {
 					calculateTaos(tempMessage.get_VisLight_data(),tempMessage.get_InfLight_data());
 
 			/** ####################### TEMPORARY CODE ####################### **/
+						
 			if(environments[(tempMessage.get_nodeid() - 1)/ 5].compareTo("lab_16") == 0) {
 				System.out.println("This is env 16!");
 				//				Low environment luminosity
@@ -231,7 +231,7 @@ class Sense implements MessageListener  {
 					(1223 * 1024)/tempMessage.get_Voltage_data();
 
 			if(voltage >= 2100) {
-				/**				try {			
+				try {			
 
 					//Set URL address
 					//192.168.200.242
@@ -284,7 +284,7 @@ class Sense implements MessageListener  {
 					System.out.println("A malformed URL exception has occurred"+ e.getMessage());
 				} catch (IOException e) {
 					System.out.println("Error:"+ e.getMessage());
-				}**/
+				}
 			}
 			else {
 				System.out.println("Voltage is too low, package rejected.\n");
