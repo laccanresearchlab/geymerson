@@ -43,15 +43,15 @@ bool SensorList::isConnected() {
 void SensorList::requestData() {
     //public ip: 200.133.124.11
     //private 192.168.200.242
-    m_manager->get(QNetworkRequest(QUrl("http://192.168.200.242/api/v1/sensors")));
-//    m_manager->get(QNetworkRequest(QUrl("http://200.133.124.11/api/v1/sensors")));
+//    m_manager->get(QNetworkRequest(QUrl("http://192.168.200.242/api/v1/sensors")));
+    m_manager->get(QNetworkRequest(QUrl("http://200.133.124.11/api/v1/sensors")));
     qDebug() << "Downloading data...";
 }
 
 void SensorList::requestData(QString query) {
     qDebug() << "Starting user request download.";
-    QString urlRequest("http://192.168.200.242/api/v1/sensors"+query);
-//    QString urlRequest("http://200.133.124.11/api/v1/sensors"+query);
+//    QString urlRequest("http://192.168.200.242/api/v1/sensors"+query);
+    QString urlRequest("http://200.133.124.11/api/v1/sensors"+query);
 //    qDebug() << "query string: " << "http://200.133.124.11/api/v1/sensors"+query;
     m_manager->get(QNetworkRequest(QUrl(urlRequest)));
 }

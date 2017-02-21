@@ -81,8 +81,9 @@ class Sense implements MessageListener  {
 		showData(msg);
 
 		//insert data into database
-		saveToDatabase(msg);
+		saveData(msg);
 	}
+	
 
 	private int[] calculateTaos(int VisibleLight,int InfraredLight) {
 		final int CHORD_VAL[]={0,16,49,115,247,511,1039,2095};
@@ -184,8 +185,47 @@ class Sense implements MessageListener  {
 			System.out.println();
 		}
 	}
+	
+	private void connectAndSaveToDatabase(String databaseName, String data) {
+		try {			
 
-	private void saveToDatabase(Message message) {
+			//Set URL address
+			//192.168.200.242
+			URL url = new URL("http://192.168.200.242/api/v1/"+databaseName+'/');
+
+			//Request connection
+			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+
+			//Set request type
+			conn.setRequestMethod("POST");
+			//Set request properties
+			conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+			conn.setRequestProperty("Accept-Language", "pt-br");
+			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			conn.setRequestProperty("charset", "UTF-8");
+			conn.setDoOutput(true);
+
+			//Write data to server
+			DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+			wr.writeBytes(data);
+			wr.flush();
+
+			//Close connection
+			wr.close();
+
+			int responseCode = conn.getResponseCode();					
+			System.out.println("\nSending 'POST' request to URL : " + url);
+			System.out.println("Response Code : " + responseCode);
+
+
+		} catch (MalformedURLException e) {
+			System.out.println("A malformed URL exception has occurred"+ e.getMessage());
+		} catch (IOException e) {
+			System.out.println("Error:"+ e.getMessage());
+		}
+	}
+
+	private void saveData(Message message) {
 		if(message instanceof SenseMsg) {	
 			//Get packet
 			SenseMsg tempMessage = (SenseMsg) message;
@@ -195,31 +235,33 @@ class Sense implements MessageListener  {
 					calculateTaos(tempMessage.get_VisLight_data(),tempMessage.get_InfLight_data());
 
 			/** ####################### TEMPORARY CODE ####################### **/
-						
-			if(environments[(tempMessage.get_nodeid() - 1)/ 5].compareTo("lab_16") == 0) {
-				System.out.println("This is env 16!");
-				//				Low environment luminosity
-				//				send a "turn on" lights command
-				//				to the Xbee network
-				if(taosCalcData[0] <= 10 && !lightsOn) {
-					sendCommand(DATA_TO_SEND);
-					lightsOn = true;
-					System.out.println("Lights: "+taosCalcData[0]+" Send on");
-				}
-				else if(taosCalcData[0] <= 10 && lightsOn) {
-					lightsOn = true;
-				}
 
-				//Turn on lights
-				else if(taosCalcData[0] > 10 && lightsOn) {
-					sendCommand(DATA_TO_SEND1);
-					System.out.println("Lights: "+taosCalcData[0]+" Send off");
-					lightsOn = false;
-				}
-				else if(taosCalcData[0] > 10 && !lightsOn) {
-					lightsOn = false;
-				}
-			}
+			
+//			if(environments[(tempMessage.get_nodeid() - 1)/ 5].compareTo("lab_16") == 0) {
+//				System.out.println("This is env 16!");
+//				//				Low environment luminosity
+//				//				send a "turn on" lights command
+//				//				to the Xbee network
+//				if(taosCalcData[0] <= 400 && !lightsOn) {
+//					sendCommand(DATA_TO_SEND);
+//					lightsOn = true;
+//					System.out.println("Lights: "+taosCalcData[0]+" Send on");
+//				}
+//				else if(taosCalcData[0] <= 400 && lightsOn) {
+//					lightsOn = true;
+//				}
+//
+//				//Turn on lights
+//				else if(taosCalcData[0] > 400 && lightsOn) {
+//					sendCommand(DATA_TO_SEND1);
+//					System.out.println("Lights: "+taosCalcData[0]+" Send off");
+//					lightsOn = false;
+//				}
+//				else if(taosCalcData[0] > 400 && !lightsOn) {
+//					lightsOn = false;
+//				}
+//			}
+			
 
 			/** ########################################################################## **/
 
@@ -231,60 +273,27 @@ class Sense implements MessageListener  {
 					(1223 * 1024)/tempMessage.get_Voltage_data();
 
 			if(voltage >= 2100) {
-				try {			
 
-					//Set URL address
-					//192.168.200.242
-					URL url = new URL("http://192.168.200.242/api/v1/sensors");
-
-					//Request connection
-					HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-
-					//Set request type
-					conn.setRequestMethod("POST");
-					//Set request properties
-					conn.setRequestProperty("User-Agent", "Mozilla/5.0");
-					conn.setRequestProperty("Accept-Language", "pt-br");
-					conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-					conn.setRequestProperty("charset", "UTF-8");
-					conn.setDoOutput(true);
-
-					//Save sensor data to a formatted string					
-					String data = String.format("nodeID=%s&sensirion_temp=%s&"
-							+ "sensirion_hum=%s&intersema_temp=%s&"
-							+ "intersema_press=%s&infrared_light=%s&"
-							+ "light=%s&accel_x=%s&"
-							+ "accel_y=%s&voltage=%s&"								
-							+ "country=%s&state=%s&"
-							+ "city=%s&latitude=%s&"
-							+ "longitude=%s&env_id=%s&"
-							+ "date=%s", tempMessage.get_nodeid(), sensirionCalcData[0],
-							sensirionCalcData[1], tempMessage.getElement_Intersema_data(0)/10, 
-							tempMessage.getElement_Intersema_data(1)/10, taosCalcData[1], 
-							taosCalcData[0], tempMessage.get_AccelX_data(), 
-							tempMessage.get_AccelY_data(), voltage,
-							"Brazil", "Alagoas", "Maceió",
-							"-9.555032", "-35.774708", environments[(tempMessage.get_nodeid() - 1)/ 5], date);
-
-
-					//Write data to server
-					DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-					wr.writeBytes(data);
-					wr.flush();
-
-					//Close connection
-					wr.close();
-
-					int responseCode = conn.getResponseCode();					
-					System.out.println("\nSending 'POST' request to URL : " + url);
-					System.out.println("Response Code : " + responseCode);
-
-
-				} catch (MalformedURLException e) {
-					System.out.println("A malformed URL exception has occurred"+ e.getMessage());
-				} catch (IOException e) {
-					System.out.println("Error:"+ e.getMessage());
-				}
+				//Save sensor data to a formatted string					
+				String data = String.format("nodeID=%s&sensirion_temp=%s&"
+						+ "sensirion_hum=%s&intersema_temp=%s&"
+						+ "intersema_press=%s&infrared_light=%s&"
+						+ "light=%s&accel_x=%s&"
+						+ "accel_y=%s&voltage=%s&"								
+						+ "country=%s&state=%s&"
+						+ "city=%s&latitude=%s&"
+						+ "longitude=%s&env_id=%s&"
+						+ "date=%s", tempMessage.get_nodeid(), sensirionCalcData[0],
+						sensirionCalcData[1], tempMessage.getElement_Intersema_data(0)/10, 
+						tempMessage.getElement_Intersema_data(1)/10, taosCalcData[1], 
+						taosCalcData[0], tempMessage.get_AccelX_data(), 
+						tempMessage.get_AccelY_data(), voltage,
+						"Brazil", "Alagoas", "Maceió",
+						"-9.555032", "-35.774708", environments[(tempMessage.get_nodeid() - 1)/ 5], date);
+				
+				//Save data to a remote server
+				connectAndSaveToDatabase("sensors", data);
+				connectAndSaveToDatabase("sensors0", data);
 			}
 			else {
 				System.out.println("Voltage is too low, package rejected.\n");
