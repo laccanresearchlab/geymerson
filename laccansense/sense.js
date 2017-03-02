@@ -179,6 +179,7 @@ function createRequestString() {
 
     requestString = "";
 
+//    requestString = '/' + fromDate.getTime() + '/' + toDate.getTime() + '/';
     requestString = '/' + fromDate + '/' + toDate + '/';
     requestString += roomComboBox.currentText + '/';
     requestString += emailTextField.text + '/';
@@ -205,5 +206,8 @@ function createRequestString() {
     }
     if(accelYCheckBox.checked) {
         requestString += "accel_y ";
+    }
+    if(allTheFieldsCheckBox.checked) {
+        requestString += "allFields"
     }
 }

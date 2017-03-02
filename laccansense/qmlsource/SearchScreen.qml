@@ -57,7 +57,7 @@ Item {
 
                 anchors {
                     top: title.bottom
-                    topMargin: root.height * 0.05
+                    topMargin: hpercent(root, 5)
                     horizontalCenter: parent.horizontalCenter
                 }
 
@@ -66,16 +66,16 @@ Item {
                     text: "Environment: "
                     font.pixelSize: wpercent(root, 4)
                     Layout.columnSpan: 2
-                    Layout.leftMargin:  20
+                    Layout.leftMargin:  wpercent(root, 4)
                 }
 
                 MPickBox {
                     id: roomComboBox
-                    model: ["lab_16", "lab_17", "lab_18", "All"]
+                    model: ["lab_16", "lab_17", "lab_18", "reun", "All"]
                     Layout.preferredWidth: wpercent(root, 35)
                     fontPixelSize: environmentLabel.font.pixelSize
                     Layout.columnSpan: 2
-                    Layout.rightMargin:  20
+                    Layout.rightMargin:  wpercent(root, 4)
                     Layout.alignment: Qt.AlignRight
                 }
 
@@ -84,15 +84,15 @@ Item {
                     text: "From date: "
                     font.pixelSize: wpercent(root, 4)
                     Layout.columnSpan: 4
-                    Layout.leftMargin:  20
+                    Layout.leftMargin:  wpercent(root, 4)
                 }
 
                 Rectangle {
                     Layout.columnSpan: 4
                     Layout.fillWidth: true
                     Layout.preferredHeight: hpercent(root, 11)
-                    Layout.leftMargin: 20
-                    Layout.rightMargin: 20
+                    Layout.leftMargin: wpercent(root, 4)
+                    Layout.rightMargin: wpercent(root, 4)
                     color: container.color
                     border.color: Qt.lighter(color, 0.9)
                     radius: 3
@@ -177,8 +177,8 @@ Item {
                     Layout.columnSpan: 4
                     Layout.fillWidth: true
                     Layout.preferredHeight: hpercent(root, 11)
-                    Layout.leftMargin: 20
-                    Layout.rightMargin: 20
+                    Layout.leftMargin: wpercent(root, 4)
+                    Layout.rightMargin: wpercent(root, 4)
                     color: container.color
                     border.color: Qt.lighter(color, 0.9)
                     radius: 3
@@ -263,8 +263,8 @@ Item {
                     Layout.fillWidth: true
                     Layout.preferredHeight: hpercent(root, 15)
                     Layout.columnSpan: 4
-                    Layout.rightMargin: 20
-                    Layout.leftMargin: 20
+                    Layout.rightMargin: wpercent(root, 4)
+                    Layout.leftMargin: wpercent(root, 4)
 
                     Grid {
                         id: checkBoxes
@@ -273,16 +273,27 @@ Item {
 
                         CheckBox {
                             id: temperatureCheckBox
+                            onCheckedChanged: {
+                                if(checked) {
+                                    allTheFieldsCheckBox.checked = false;
+                                }
+                            }
                         }
 
                         Label {
                             id: temperatureLabel
                             text: "Temperature"
                             font.pixelSize: labelFontPixelSize
+//                            Layout.column: 2
                         }
 
                         CheckBox {
                             id: humidityCheckBox
+                            onCheckedChanged: {
+                                if(checked) {
+                                    allTheFieldsCheckBox.checked = false;
+                                }
+                            }
                         }
 
                         Label {
@@ -293,6 +304,11 @@ Item {
 
                         CheckBox {
                             id: pressureCheckBox
+                            onCheckedChanged: {
+                                if(checked) {
+                                    allTheFieldsCheckBox.checked = false;
+                                }
+                            }
                         }
 
                         Label {
@@ -303,6 +319,11 @@ Item {
 
                         CheckBox {
                             id: lightCheckBox
+                            onCheckedChanged: {
+                                if(checked) {
+                                    allTheFieldsCheckBox.checked = false;
+                                }
+                            }
                         }
 
                         Label {
@@ -313,6 +334,11 @@ Item {
 
                         CheckBox {
                             id: infraredLightCheckBox
+                            onCheckedChanged: {
+                                if(checked) {
+                                    allTheFieldsCheckBox.checked = false;
+                                }
+                            }
                         }
 
                         Label {
@@ -324,6 +350,11 @@ Item {
 
                         CheckBox {
                             id: accelXCheckBox
+                            onCheckedChanged: {
+                                if(checked) {
+                                    allTheFieldsCheckBox.checked = false;
+                                }
+                            }
                         }
 
                         Label {
@@ -334,11 +365,37 @@ Item {
 
                         CheckBox {
                             id: accelYCheckBox
+                            onCheckedChanged: {
+                                if(checked) {
+                                    allTheFieldsCheckBox.checked = false;
+                                }
+                            }
                         }
 
                         Label {
                             id: accelYLabel
                             text: "Acceleration Y"
+                            font.pixelSize: labelFontPixelSize
+                        }
+
+                        CheckBox {
+                            id: allTheFieldsCheckBox
+                            onCheckedChanged: {
+                                if(checked) {
+                                    temperatureCheckBox.checked = false;
+                                    humidityCheckBox.checked = false;
+                                    pressureCheckBox.checked = false;
+                                    lightCheckBox.checked = false;
+                                    infraredLightCheckBox.checked = false;
+                                    accelXCheckBox.checked = false;
+                                    accelYCheckBox.checked = false;
+                                }
+                            }
+                        }
+
+                        Label {
+                            id: allTheFieldsLabel
+                            text: "All the fields"
                             font.pixelSize: labelFontPixelSize
                         }
                     }
@@ -395,6 +452,7 @@ Item {
                         onClicked: {
                             emailRequest = true
                             Sense.createRequestString()
+                            console.log(requestString)
                             Sense.request(requestString)
                         }
                         onEntered: {
@@ -407,6 +465,29 @@ Item {
                         }
                     }
                 }
+
+//                Rectangle {
+//                    Layout.columnSpan: 4
+//                    Layout.fillWidth: true
+//                    Layout.preferredHeight: hpercent(root, 11)
+//                    Layout.leftMargin: 20
+//                    Layout.rightMargin: 20
+//                    color: container.color
+//                    border.color: Qt.lighter(color, 0.9)
+//                    radius: 3
+
+//                    GridLayout {
+//                        columns: 2
+//                        width: parent.width
+//                        rowSpacing: 3
+
+//                        Label {
+//                            id: folderLabel
+//                            text: "Folder "
+//                            font.pixelSize: wpercent(root, 4)
+//                        }
+//                    }
+//                }
             }
 
             Calendar {
@@ -420,6 +501,7 @@ Item {
                     var x;
                     if(dateVerifier) {
                         fromDate = new Date(datePicker.selectedDate)
+//                        console.log(fromDate)
                         if(!(toDate === undefined) && fromDate > toDate) { //Switch if fromDate is lesser than toDate
                             x = fromDate;
                             fromDate = toDate;

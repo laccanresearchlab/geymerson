@@ -8,7 +8,6 @@ int main(int argc, char *argv[]) {
 //    QGuiApplication app(argc, argv);
     QApplication app(argc, argv);
 
-
     // register the type DataEntryModel
     // under the url "org.example" in version 1.0
     // under the name "DataEntryModel"

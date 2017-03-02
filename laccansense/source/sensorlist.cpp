@@ -39,7 +39,6 @@ bool SensorList::isConnected() {
     return true;
 }
 
-
 void SensorList::requestData() {
     //public ip: 200.133.124.11
     //private 192.168.200.242
@@ -73,8 +72,13 @@ void SensorList::requestFinished(QNetworkReply *request) {
 
         //QString receivedData = (QString)request->readAll();
         QByteArray receivedData = request->readAll();
-        QJsonDocument jsonResponse = QJsonDocument::fromJson(receivedData);
+        QJsonDocument jsonResponse = QJsonDocument::fromJson(receivedData);       
         QJsonArray jsonArray = jsonResponse.array();
+
+//        QFile file("data.json");
+//        file.open(QIODevice::WriteOnly);
+//        file.write(receivedData);
+//        file.close();
 
         //Create a sensor instance and save it inside a list
         foreach (const QJsonValue & value, jsonArray) {

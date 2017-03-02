@@ -74,7 +74,7 @@ Item {
 
                 MPickBox {
                     id: roomComboBox
-                    model: ["lab_15", "lab_16", "lab_17"]
+                    model: ["lab_15", "lab_16", "lab_17", "reun"]
                     fontPixelSize: environmentLabel.font.pixelSize
                     Layout.columnSpan: 2
                     Layout.alignment: Qt.AlignRight
