@@ -81,7 +81,7 @@ class Sense implements MessageListener  {
 		showData(msg);
 
 		//insert data into database
-		saveData(msg);
+//		saveData(msg);
 	}
 	
 
@@ -175,7 +175,8 @@ class Sense implements MessageListener  {
 			System.out.println("Accelerometer X axis:   "+tempMessage.get_AccelX_data());
 			System.out.println("Accelerometer Y axis:   "+tempMessage.get_AccelY_data());
 			System.out.println("Voltage:                "+voltage);
-			System.out.println("Environment id:\t\t"+environments[(tempMessage.get_nodeid() - 1)/ 5]);
+//			System.out.println("Environment id:\t\t"+environments[(tempMessage.get_nodeid() - 1)/ 5]);
+			System.out.println("Environment id:\t\ttest");
 			System.out.println("Country:                "+"Brazil");
 			System.out.println("State:                	"+"Alagoas");
 			System.out.println("City:                	"+"Maceio");
@@ -237,30 +238,30 @@ class Sense implements MessageListener  {
 			/** ####################### TEMPORARY CODE ####################### **/
 
 			
-//			if(environments[(tempMessage.get_nodeid() - 1)/ 5].compareTo("lab_16") == 0) {
-//				System.out.println("This is env 16!");
-//				//				Low environment luminosity
-//				//				send a "turn on" lights command
-//				//				to the Xbee network
-//				if(taosCalcData[0] <= 400 && !lightsOn) {
-//					sendCommand(DATA_TO_SEND);
-//					lightsOn = true;
-//					System.out.println("Lights: "+taosCalcData[0]+" Send on");
-//				}
-//				else if(taosCalcData[0] <= 400 && lightsOn) {
-//					lightsOn = true;
-//				}
-//
-//				//Turn on lights
-//				else if(taosCalcData[0] > 400 && lightsOn) {
-//					sendCommand(DATA_TO_SEND1);
-//					System.out.println("Lights: "+taosCalcData[0]+" Send off");
-//					lightsOn = false;
-//				}
-//				else if(taosCalcData[0] > 400 && !lightsOn) {
-//					lightsOn = false;
-//				}
-//			}
+			if(environments[(tempMessage.get_nodeid() - 1)/ 5].compareTo("lab_16") == 0) {
+				System.out.println("This is env 16!");
+				//				Low environment luminosity
+				//				send a "turn on" lights command
+				//				to the Xbee network
+				if(taosCalcData[0] <= 400 && !lightsOn) {
+					sendCommand(DATA_TO_SEND);
+					lightsOn = true;
+					System.out.println("Lights: "+taosCalcData[0]+" Send on");
+				}
+				else if(taosCalcData[0] <= 400 && lightsOn) {
+					lightsOn = true;
+				}
+
+				//Turn on lights
+				else if(taosCalcData[0] > 400 && lightsOn) {
+					sendCommand(DATA_TO_SEND1);
+					System.out.println("Lights: "+taosCalcData[0]+" Send off");
+					lightsOn = false;
+				}
+				else if(taosCalcData[0] > 400 && !lightsOn) {
+					lightsOn = false;
+				}
+			}
 			
 
 			/** ########################################################################## **/
