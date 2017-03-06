@@ -1,7 +1,7 @@
 ## A python script to download data collected by
 ## the micaz wireless sensors network configured
 ## at the Laboratorio de Computacao Cientifica e
-## Analise Numerica (LaCCAN) the requested data 
+## Analise Numerica (LaCCAN). The requested data 
 ## will be sent to the user informed e-mail in
 ## <userEmail> field
 ## 
@@ -11,7 +11,7 @@
 import httplib
 import datetime
 
-## Uncomment the both date codes bellow if you want to pass
+## Uncomment date codes bellow if you want to pass
 ## the inputs in the terminal and comment the fromDate and
 ## to date at line 27 and 28
 

@@ -11,7 +11,7 @@
 import httplib
 import datetime
 
-## Uncomment the both date codes bellow if you want to pass
+## Uncomment date codes bellow if you want to pass
 ## the inputs in the terminal and comment the fromDate and
 ## to date at line 27 and 28
 
